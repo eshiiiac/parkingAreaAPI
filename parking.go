@@ -27,10 +27,10 @@ var Kathmandu = []city{
 }
 
 var Lalitpur = []city{
-	{Location: "New Road", Price: 10.00, Type: "Open Space"},
-	{Location: "Koteshwor", Price: 20.00, Type: "Open Space"},
-	{Location: "New Baneshwor", Price: 15.00, Type: "Closed space"},
-	{Location: "Gaushala", Price: 10.00, Type: "Underground"},
+	{Location: "Jwalakhel", Price: 10.00, Type: "Open Space"},
+	{Location: "Kumariparti", Price: 20.00, Type: "Open Space"},
+	{Location: "Ekantakuna", Price: 15.00, Type: "Closed space"},
+	{Location: "Dhobighat", Price: 10.00, Type: "Underground"},
 }
 
 func displayParkingArea(c *gin.Context) {
@@ -53,8 +53,12 @@ func bktParkings(c *gin.Context) {
 func ktmParkings(c *gin.Context) {
 	c.IndentedJSON(http.StatusCreated, Kathmandu)
 }
+func ltpParkings(c *gin.Context) {
+	c.IndentedJSON(http.StatusCreated, Lalitpur)
+}
+
 func home(c *gin.Context) {
-	htmlContent:= `<!DOCTYPE html>
+	htmlContent := `<!DOCTYPE html>
 <html>
 <head>
 	<title>Find Parking Areas</title>
@@ -66,12 +70,15 @@ func home(c *gin.Context) {
 		<select name="city" id="city">
 			<option value="bkt">Bhaktapur</option>
 			<option value="ktm">Kathmandu</option>
+			<option value="ltp">Lalitpur</option>
 		</select>
 		<button type="submit">Find Parking</button>
 	</form>
+
+	
 </body>
 </html>`
-c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(htmlContent))
+	c.Data(http.StatusOK, "text/html; charset=utf-8", []byte(htmlContent))
 	/*c.String(200,"Find Parking areas near you!\nadd '/bkt' to find parking areas in Bhaktapur city\n add '/ktm' to find parking areas in Kathmandu city")*/
 
 }
@@ -83,6 +90,8 @@ func navigate(c *gin.Context) {
 		c.Redirect(http.StatusFound, "/bkt")
 	case "ktm":
 		c.Redirect(http.StatusFound, "/ktm")
+	case "ltp":
+		c.Redirect(http.StatusFound, "/ltp")
 	default:
 		c.String(http.StatusBadRequest, "Invalid city selection")
 	}
@@ -94,6 +103,7 @@ func main() {
 	router.GET("/", home)
 	router.GET("/bkt", bktParkings)
 	router.GET("/ktm", ktmParkings)
+	router.GET("/ltp", ltpParkings)
 	router.POST("/navigate", navigate)
 	router.Run("localhost:8080")
 }
